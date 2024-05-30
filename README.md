@@ -10,7 +10,7 @@ https://youtu.be/9Bjq2lXnfBI?si=s0VGVHdJ8H3_aLlS
 
 To achieve higher accuracy and reliability, I use 0.012 molar HCl, commercial devices usually use higher molarity. Why exactly 0.012? - Because that's 5 ml of 37% HCl in 5 L of reverse osmosis water, and it's easy to prepare.
 
-In my case, the device is controlled and the data visualized on a Raspberry Pi Node-RED dashboard and I use ngrok to make the whole setup accessible over the internet, but you can build your own solution. The data is transmitted via MQTT.
+In my case, the device is controlled and the data visualized on a Raspberry Pi Node-RED dashboard, but you can build your own solution. The data is transmitted via MQTT.
 
 Why is this device so accurate/reliable? Things I've tested over time that make a big difference in accuracy:
 - Low acid concentration: the lower the concentration, the smaller the effect of errors during titration (e.g., air bubbles).
@@ -22,7 +22,7 @@ These points ensure that even a cheap pH probe is sufficient to get accurate res
 
 - 1x Wemos D1 mini ESP32
 - 1x DF-Robot pH-Meter V2
-- 2x Nema 17 stepper motor 17Ncm 1A 23mm body length
+- 2x Nema 17 stepper motor  42Ncm 1,5A 42x42x38mm
 - JST-XH 2-, 3- and 4-pin
 - 1x LM2596S, set to 5V output
 - 2x TMC2208 drivers
@@ -30,14 +30,14 @@ These points ensure that even a cheap pH probe is sufficient to get accurate res
 - 1x 2,2 K resistor
 - 2x 100uF capacitor
 - 1x 4,7 uF capacitor
-- 2x Nema 17 perestaltic pumps (or use the 3D printed version shared here which requires 5 * 11 * 4mm ball bearings and 2*4 BPT tube)
+- 2x Nema 17 perestaltic pumps
 - 1x 100 ml Beaker
-- Silicone tube 2/4 oder 4/6
-- 1x 60mm PC cooloing fan
+- Silicone tube 2/4 or 4/6
+- 1x 60mm PC cooling fan
 - 1x magnetic stirrer ca 1cm length
 - 2x flat magnets, ca. 1 cm length, 2mm height
 - 1x 12V Powersupply > 2A
-- 0.012M HCl
+- 0.02M HCl
 
 
 ## PCB Layout
@@ -75,16 +75,54 @@ Commands can be given to the device via mqtt (output channel) or via the serial 
 - end stirrer: e
 - remove sample: r
 - reset: o
-- Calibration:
-    - c enterph -> enter the calibration mode
-    - c calph   -> calibrate with the standard buffer solution, two buffer solutions(4.0 and 7.0) will be automaticlly recognized
-    - c exitph  -> save the calibrated parameters and exit from calibration mode
-
+- calibrate pH4: 4
+- calibrate pH7: 7
+- measure pH probe voltage: v
 
 
 ## calculating KH
 
-KH [dKH] = (drops / 7000) * titration volume / sample Volume * 2800 * conc HCL * correction factor
+KH [dKH] = (drops / 6000) * titration volume / sample Volume * 2800 * conc HCL * correction factor
 
 - Titration and sample volume are measured when using the t and s commands, measure the volumes as accurately as possible to get accurate results.
-- Standard HCl concentration is 0.012M which equates to 5 ml 37% HCl in 5 L water (first Water then acid!). This for me is the best balance between accuracy/reproducibility and reasonable volumes to handle.
+- Standard HCl concentration is 0.02M which equates to 10 ml 37% HCl in 5 L water (first Water then acid!). This for me is the best balance between accuracy/reproducibility and reasonable volumes to handle.
+
+
+
+## Installing and setting up Mosquitto
+On your Raspberry pi run on the command line:
+
+```
+sudo apt update && sudo apt upgrade
+sudo apt install -y mosquitto mosquitto-clients
+sudo systemctl enable mosquitto.service
+```
+
+Open:
+```
+sudo nano /etc/mosquitto/mosquitto.conf
+```
+
+At the top of the file paste:
+```
+per_listener_settings false
+```
+
+And paste at the end of the file:
+```
+listener 1883
+allow_anonymous true
+password_file /etc/mosquitto/passwd
+```
+Then, press CTRL-X to exit and save the file. Press Y and Enter.
+ 
+Restart Mosquitto for the changes to take effect:
+```
+sudo systemctl restart mosquitto
+```
+
+
+## Node Red Dashboard
+
+I use Node Red to manage the workflows and as dashboard. You can use my backuped workflow. Just make sure to change this to the IP of your mqtt broker in the file:
+"broker": "homeserver.local"
