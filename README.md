@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# KHcontroller_V3
-=======
 # KHcontroller_V3
 
 ![](3dPrints/KHcontroller.jpeg)
@@ -91,4 +88,3 @@ KH [dKH] = (drops / 7000) * titration volume / sample Volume * 2800 * conc HCL *
 
 - Titration and sample volume are measured when using the t and s commands, measure the volumes as accurately as possible to get accurate results.
 - Standard HCl concentration is 0.012M which equates to 5 ml 37% HCl in 5 L water (first Water then acid!). This for me is the best balance between accuracy/reproducibility and reasonable volumes to handle.
->>>>>>> 0c1e0ca (initial commit)
