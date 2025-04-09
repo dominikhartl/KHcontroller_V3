@@ -8,7 +8,7 @@ This is my version of a DIY KH measurement device for my reef tank. It is built 
 The device is controlled by an ESP32 module and a custom-designed PCB that connects the ESP32, the pH meter, stepper motors, and stirrer and all the peripherals. The principle is simple: HCl is titrated into the water sample, and the volume needed to reach a pH of 4.5 is used as the basis for calculating alkalinity. When I built the first prototype, I made an explanatory video (in English):
 https://youtu.be/9Bjq2lXnfBI?si=s0VGVHdJ8H3_aLlS
 
-To achieve higher accuracy and reliability, I use 0.012 molar HCl, commercial devices usually use higher molarity. Why exactly 0.012? - Because that's 5 ml of 37% HCl in 5 L of reverse osmosis water, and it's easy to prepare.
+To achieve higher accuracy and reliability, I use 0.02 molar HCl, commercial devices usually use higher molarity. Why exactly 0.02? - Because that's 10 ml of 37% HCl in 5 L of reverse osmosis water, and it's easy to prepare.
 
 In my case, the device is controlled and the data visualized on a Raspberry Pi Node-RED dashboard, but you can build your own solution. The data is transmitted via MQTT.
 
